@@ -18,6 +18,7 @@ from pathlib import Path
 from types import SimpleNamespace as config
 
 CHATGPT_API_KEY = os.getenv("CHATGPT_API_KEY")
+BASE_URL = os.getenv("BASE_URL")
 
 def count_tokens(text, model=None):
     if not text:
@@ -28,7 +29,7 @@ def count_tokens(text, model=None):
 
 def ChatGPT_API_with_finish_reason(model, prompt, api_key=CHATGPT_API_KEY, chat_history=None):
     max_retries = 10
-    client = openai.OpenAI(api_key=api_key)
+    client = openai.OpenAI(api_key=api_key, base_url=BASE_URL)
     for i in range(max_retries):
         try:
             if chat_history:
@@ -36,7 +37,7 @@ def ChatGPT_API_with_finish_reason(model, prompt, api_key=CHATGPT_API_KEY, chat_
                 messages.append({"role": "user", "content": prompt})
             else:
                 messages = [{"role": "user", "content": prompt}]
-            
+
             response = client.chat.completions.create(
                 model=model,
                 messages=messages,
@@ -60,7 +61,7 @@ def ChatGPT_API_with_finish_reason(model, prompt, api_key=CHATGPT_API_KEY, chat_
 
 def ChatGPT_API(model, prompt, api_key=CHATGPT_API_KEY, chat_history=None):
     max_retries = 10
-    client = openai.OpenAI(api_key=api_key)
+    client = openai.OpenAI(api_key=api_key, base_url=BASE_URL)
     for i in range(max_retries):
         try:
             if chat_history:
@@ -68,13 +69,13 @@ def ChatGPT_API(model, prompt, api_key=CHATGPT_API_KEY, chat_history=None):
                 messages.append({"role": "user", "content": prompt})
             else:
                 messages = [{"role": "user", "content": prompt}]
-            
+
             response = client.chat.completions.create(
                 model=model,
                 messages=messages,
                 temperature=0,
             )
-   
+
             return response.choices[0].message.content
         except Exception as e:
             print('************* Retrying *************')
@@ -84,14 +85,14 @@ def ChatGPT_API(model, prompt, api_key=CHATGPT_API_KEY, chat_history=None):
             else:
                 logging.error('Max retries reached for prompt: ' + prompt)
                 return "Error"
-            
+
 
 async def ChatGPT_API_async(model, prompt, api_key=CHATGPT_API_KEY):
     max_retries = 10
     messages = [{"role": "user", "content": prompt}]
     for i in range(max_retries):
         try:
-            async with openai.AsyncOpenAI(api_key=api_key) as client:
+            async with openai.AsyncOpenAI(api_key=api_key, base_url=BASE_URL) as client:
                 response = await client.chat.completions.create(
                     model=model,
                     messages=messages,
@@ -105,22 +106,22 @@ async def ChatGPT_API_async(model, prompt, api_key=CHATGPT_API_KEY):
                 await asyncio.sleep(1)  # Wait for 1s before retrying
             else:
                 logging.error('Max retries reached for prompt: ' + prompt)
-                return "Error"  
-            
-            
+                return "Error"
+
+
 def get_json_content(response):
     start_idx = response.find("```json")
     if start_idx != -1:
         start_idx += 7
         response = response[start_idx:]
-        
+
     end_idx = response.rfind("```")
     if end_idx != -1:
         response = response[:end_idx]
-    
+
     json_content = response.strip()
     return json_content
-         
+
 
 def extract_json(content):
     try:
@@ -181,7 +182,7 @@ def get_nodes(structure):
         for item in structure:
             nodes.extend(get_nodes(item))
         return nodes
-    
+
 def structure_to_list(structure):
     if isinstance(structure, dict):
         nodes = []
@@ -195,7 +196,7 @@ def structure_to_list(structure):
             nodes.extend(structure_to_list(item))
         return nodes
 
-    
+
 def get_leaf_nodes(structure):
     if isinstance(structure, dict):
         if not structure['nodes']:
@@ -310,7 +311,7 @@ class JsonLogger:
     def __init__(self, file_path):
         # Extract PDF name for logger name
         pdf_name = get_pdf_name(file_path)
-            
+
         current_time = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.filename = f"{pdf_name}_{current_time}.json"
         os.makedirs("./logs", exist_ok=True)
@@ -323,7 +324,7 @@ class JsonLogger:
         else:
             self.log_data.append({'message': message})
         # Add new message to the log data
-        
+
         # Write entire log data to file
         with open(self._filepath(), "w") as f:
             json.dump(self.log_data, f, indent=2)
@@ -343,7 +344,7 @@ class JsonLogger:
 
     def _filepath(self):
         return os.path.join("logs", self.filename)
-    
+
 
 
 
@@ -354,11 +355,11 @@ def list_to_tree(data):
             return None
         parts = str(structure).split('.')
         return '.'.join(parts[:-1]) if len(parts) > 1 else None
-    
+
     # First pass: Create nodes and track parent-child relationships
     nodes = {}
     root_nodes = []
-    
+
     for item in data:
         structure = item.get('structure')
         node = {
@@ -367,12 +368,12 @@ def list_to_tree(data):
             'end_index': item.get('end_index'),
             'nodes': []
         }
-        
+
         nodes[structure] = node
-        
+
         # Find parent
         parent_structure = get_parent_structure(structure)
-        
+
         if parent_structure:
             # Add as child to parent if parent exists
             if parent_structure in nodes:
@@ -382,7 +383,7 @@ def list_to_tree(data):
         else:
             # No parent, this is a root node
             root_nodes.append(node)
-    
+
     # Helper function to clean empty children arrays
     def clean_node(node):
         if not node['nodes']:
@@ -391,7 +392,7 @@ def list_to_tree(data):
             for child in node['nodes']:
                 clean_node(child)
         return node
-    
+
     # Clean and return the tree
     return [clean_node(node) for node in root_nodes]
 
@@ -436,7 +437,7 @@ def get_page_tokens(pdf_path, model="gpt-4o-2024-11-20", pdf_parser="PyPDF2"):
     else:
         raise ValueError(f"Unsupported PDF parser: {pdf_parser}")
 
-        
+
 
 def get_text_of_pdf_pages(pdf_pages, start_page, end_page):
     text = ""
@@ -514,7 +515,7 @@ def print_json(data, max_len=40, indent=2):
             return obj[:max_len] + '...'
         else:
             return obj
-    
+
     simplified = simplify_data(data)
     print(json.dumps(simplified, indent=indent, ensure_ascii=False))
 
@@ -617,7 +618,7 @@ async def generate_summaries_for_structure(structure, model=None):
     nodes = structure_to_list(structure)
     tasks = [generate_node_summary(node, model=model) for node in nodes]
     summaries = await asyncio.gather(*tasks)
-    
+
     for node, summary in zip(nodes, summaries):
         node['summary'] = summary
     return structure
@@ -634,11 +635,11 @@ def create_clean_structure_for_description(structure):
         for key in ['title', 'node_id', 'summary', 'prefix_summary']:
             if key in structure:
                 clean_node[key] = structure[key]
-        
+
         # Recursively process child nodes
         if 'nodes' in structure and structure['nodes']:
             clean_node['nodes'] = create_clean_structure_for_description(structure['nodes'])
-        
+
         return clean_node
     elif isinstance(structure, list):
         return [create_clean_structure_for_description(item) for item in structure]
