@@ -1,0 +1,155 @@
+{
+  "doc_name": "af-sdk-install",
+  "structure": [
+    {
+      "title": "Install SDK",
+      "node_id": "0000",
+      "nodes": [
+        {
+          "title": "Recommended",
+          "node_id": "0001",
+          "nodes": [
+            {
+              "title": "Get started with our SDK integration wizard",
+              "node_id": "0002"
+            }
+          ]
+        },
+        {
+          "title": "Installing the Android SDK",
+          "node_id": "0003",
+          "nodes": [
+            {
+              "title": "Install using Gradle",
+              "node_id": "0004"
+            },
+            {
+              "title": "Manual install",
+              "node_id": "0005"
+            }
+          ]
+        },
+        {
+          "title": "Setting required permissions",
+          "node_id": "0006",
+          "nodes": [
+            {
+              "title": "The AD_ID permission",
+              "node_id": "0007",
+              "nodes": [
+                {
+                  "title": "Revoking the AD_ID permission",
+                  "node_id": "0008"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "title": "ProGuard rules",
+          "node_id": "0009",
+          "nodes": [
+            {
+              "title": "AppsFlyer SDK ProGuard rules",
+              "node_id": "0010"
+            }
+          ]
+        },
+        {
+          "title": "Backup rules",
+          "node_id": "0011",
+          "nodes": [
+            {
+              "title": "Fix confilict with fullBackupContent=”true”",
+              "node_id": "0012"
+            },
+            {
+              "title": "Fix conflict with dataExtractionRule=”true”",
+              "node_id": "0013"
+            },
+            {
+              "title": "Fix conflict with allowBackup=”false”",
+              "node_id": "0014"
+            },
+            {
+              "title": "Merge backup rules in Android 12 and above",
+              "node_id": "0015"
+            },
+            {
+              "title": "Merge backup rules in Android 11 and below",
+              "node_id": "0016"
+            }
+          ]
+        },
+        {
+          "title": "Adding store referrer libraries",
+          "node_id": "0017",
+          "nodes": [
+            {
+              "title": "Google Play Install Referrer",
+              "node_id": "0018"
+            },
+            {
+              "title": "Meta Install Referrer",
+              "node_id": "0019",
+              "nodes": [
+                {
+                  "title": "Meta Install Referrer basic flow",
+                  "node_id": "0020"
+                },
+                {
+                  "title": "Prerequisites",
+                  "node_id": "0021"
+                },
+                {
+                  "title": "Configure Meta Install Referrer Support",
+                  "node_id": "0022",
+                  "nodes": [
+                    {
+                      "title": "With Facebook SDK integrated",
+                      "node_id": "0023"
+                    },
+                    {
+                      "title": "Without Facebook SDK integration",
+                      "node_id": "0024"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "title": "Huawei Install Referrer",
+              "node_id": "0025"
+            },
+            {
+              "title": "Xiaomi GetApps store referrer",
+              "node_id": "0026"
+            }
+          ]
+        },
+        {
+          "title": "Collecting AppSet ID",
+          "node_id": "0027"
+        },
+        {
+          "title": "Google Play Integrity API",
+          "node_id": "0028"
+        },
+        {
+          "title": "Known issues",
+          "node_id": "0029",
+          "nodes": [
+            {
+              "title": "Missing resource files",
+              "node_id": "0030"
+            },
+            {
+              "title": "Boot Complete",
+              "node_id": "0031"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

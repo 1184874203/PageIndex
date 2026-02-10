@@ -1,0 +1,251 @@
+{
+  "doc_name": "af-sdk-install",
+  "structure": [
+    {
+      "title": "Install SDK",
+      "node_id": "0000",
+      "text": "# Install SDK\n\nLearn how to download and install the Android SDK.",
+      "line_num": 1,
+      "nodes": [
+        {
+          "title": "Recommended",
+          "node_id": "0001",
+          "text": "## Recommended\n\n![](https://dj.dev.appsflyer.com/images/DJ_illustratration.svg)",
+          "line_num": 5,
+          "nodes": [
+            {
+              "title": "Get started with our SDK integration wizard",
+              "node_id": "0002",
+              "text": "### Get started with our SDK integration wizard\n\nLet's go",
+              "line_num": 9,
+              "summary": "### Get started with our SDK integration wizard\n\nLet's go"
+            }
+          ],
+          "prefix_summary": "## Recommended\n\n![](https://dj.dev.appsflyer.com/images/DJ_illustratration.svg)"
+        },
+        {
+          "title": "Installing the Android SDK",
+          "node_id": "0003",
+          "text": "## Installing the Android SDK\n\nInstall the Android SDK using your preferred method: Via [Gradle](https://dev.appsflyer.com/hc/docs/install-android-sdk#install-using-gradle) Gradle , or [manually](https://dev.appsflyer.com/hc/docs/install-android-sdk#manual-install) manually .",
+          "line_num": 13,
+          "nodes": [
+            {
+              "title": "Install using Gradle",
+              "node_id": "0004",
+              "text": "### Install using Gradle\n\nRecommended\n\nStep 1: Declare repositories In the Project `build.gradle` build.gradle file, declare the `mavenCentral` mavenCentral repository:\n\nGroovy\n\n```\n// ...\nrepositories {\n   mavenCentral()\n}\n/// ...\n```\n\nStep 2: Add dependencies In the application `build.gradle` build.gradle file, add the [latest Android SDK](https://mvnrepository.com/artifact/com.appsflyer/af-android-sdk) latest Android SDK package:\n\nGroovy\n\n```\ndependencies {\n    // Get the latest version from https://mvnrepository.com/artifact/com.appsflyer/af-android-sdk\n    implementation 'com.appsflyer:af-android-sdk:<<HERE_LATEST_VERSION>>'\n    // For example\n    // implementation 'com.appsflyer:af-android-sdk:6.12.1'\n}\n```",
+              "line_num": 17,
+              "summary": "### Install using Gradle\n\nRecommended\n\nStep 1: Declare repositories In the Project `build.gradle` build.gradle file, declare the `mavenCentral` mavenCentral repository:\n\nGroovy\n\n```\n// ...\nrepositories {\n   mavenCentral()\n}\n/// ...\n```\n\nStep 2: Add dependencies In the application `build.gradle` build.gradle file, add the [latest Android SDK](https://mvnrepository.com/artifact/com.appsflyer/af-android-sdk) latest Android SDK package:\n\nGroovy\n\n```\ndependencies {\n    // Get the latest version from https://mvnrepository.com/artifact/com.appsflyer/af-android-sdk\n    implementation 'com.appsflyer:af-android-sdk:<<HERE_LATEST_VERSION>>'\n    // For example\n    // implementation 'com.appsflyer:af-android-sdk:6.12.1'\n}\n```"
+            },
+            {
+              "title": "Manual install",
+              "node_id": "0005",
+              "text": "### Manual install\n\n1. In Android Studio , switch the folder structure from Android to Project :\n2. Download the latest Android SDK and paste it in your Android project, under app > libs .\n3. Right-click the aar you pasted and select Add As Library . When prompted, click Refactor . If prompted to commit to git, click OK",
+              "line_num": 46,
+              "summary": "### Manual install\n\n1. In Android Studio , switch the folder structure from Android to Project :\n2. Download the latest Android SDK and paste it in your Android project, under app > libs .\n3. Right-click the aar you pasted and select Add As Library . When prompted, click Refactor . If prompted to commit to git, click OK"
+            }
+          ],
+          "prefix_summary": "## Installing the Android SDK\n\nInstall the Android SDK using your preferred method: Via [Gradle](https://dev.appsflyer.com/hc/docs/install-android-sdk#install-using-gradle) Gradle , or [manually](https://dev.appsflyer.com/hc/docs/install-android-sdk#manual-install) manually ."
+        },
+        {
+          "title": "Setting required permissions",
+          "node_id": "0006",
+          "text": "## Setting required permissions\n\nAdd the following permissions to `AndroidManifest.xml` AndroidManifest.xml in the `manifest` manifest section:\n\nAndroidManfiest.xml\n\n```\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    package=YOUR_PACKAGE_NAME>\n\n      <uses-permission android:name=\"android.permission.INTERNET\" />\n      <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n\n      ...\n\n</manifest>\n```",
+          "line_num": 52,
+          "nodes": [
+            {
+              "title": "The AD_ID permission",
+              "node_id": "0007",
+              "text": "### The AD_ID permission\n\nIn early 2022, Google announced a change to the behavior of Google Play Services and fetching of the Android Advertising ID. According to the [announcement](https://support.google.com/googleplay/android-developer/answer/6048248?hl=en) announcement , apps targeting Android 13 (API 33) and above must declare a Google Play services normal permission in their `AndroidManifest.xml` AndroidManifest.xml file in order to get access to the device’s Advertising ID.\n\nStarting `V6.8.0` V6.8.0 , the SDK adds the AD_ID permission automatically.\n\n> 📘 Note If your app participates in the Designed for Families program: If using SDK V6.8.0 and above, you should Revoke the AD_ID permission . If using SDK older than V6.8.0 , don't add this permission to your app. For apps that target API level 32 (Android 12L) or older, this permission is not needed.\n\nApps that use SDK versions older than `V6.8.0` V6.8.0 and target Android 13 (API 33) and above must manually include the permission in their `AndroidManifest.xml` AndroidManifest.xml to have access to the Advertising ID:\n\nXML\n\n```\n<uses-permission android:name=\"com.google.android.gms.permission.AD_ID\" />\n```",
+              "line_num": 71,
+              "nodes": [
+                {
+                  "title": "Revoking the AD_ID permission",
+                  "node_id": "0008",
+                  "text": "#### Revoking the AD_ID permission\n\nAccording to [Google’s Policy](https://support.google.com/googleplay/android-developer/answer/11043825?hl=en) Google’s Policy , apps that target children must not transmit the Advertising ID.\n\nWhen using SDK `V6.8.0` V6.8.0 and above, children apps targeting Android 13 (API 33) and above must prevent the permission from getting merged into their app by adding a revoke declaration to their Manifest:\n\nAndroidManifest.xml\n\n```\n<uses-permission android:name=\"com.google.android.gms.permission.AD_ID\"\n tools:node=\"remove\"/>\n```\n\nFor more information, see [Google Play Services documentation](https://developers.google.com/android/reference/com/google/android/gms/ads/identifier/AdvertisingIdClient.Info#public-string-getid) Google Play Services documentation .",
+                  "line_num": 87,
+                  "summary": "#### Revoking the AD_ID permission\n\nAccording to [Google’s Policy](https://support.google.com/googleplay/android-developer/answer/11043825?hl=en) Google’s Policy , apps that target children must not transmit the Advertising ID.\n\nWhen using SDK `V6.8.0` V6.8.0 and above, children apps targeting Android 13 (API 33) and above must prevent the permission from getting merged into their app by adding a revoke declaration to their Manifest:\n\nAndroidManifest.xml\n\n```\n<uses-permission android:name=\"com.google.android.gms.permission.AD_ID\"\n tools:node=\"remove\"/>\n```\n\nFor more information, see [Google Play Services documentation](https://developers.google.com/android/reference/com/google/android/gms/ads/identifier/AdvertisingIdClient.Info#public-string-getid) Google Play Services documentation ."
+                }
+              ],
+              "prefix_summary": "The partial document discusses the AD_ID permission related to accessing the Android Advertising ID. It highlights Google's 2022 update requiring apps targeting Android 13 (API 33) and above to declare the AD_ID permission in their `AndroidManifest.xml` file. The document explains that starting from SDK version V6.8.0, the AD_ID permission is added automatically, but apps in the Designed for Families program should revoke it. For apps using SDK versions older than V6.8.0 and targeting Android 13 or above, the permission must be manually added. It also provides the XML code snippet for including the permission."
+            }
+          ],
+          "prefix_summary": "## Setting required permissions\n\nAdd the following permissions to `AndroidManifest.xml` AndroidManifest.xml in the `manifest` manifest section:\n\nAndroidManfiest.xml\n\n```\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    package=YOUR_PACKAGE_NAME>\n\n      <uses-permission android:name=\"android.permission.INTERNET\" />\n      <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n\n      ...\n\n</manifest>\n```"
+        },
+        {
+          "title": "ProGuard rules",
+          "node_id": "0009",
+          "text": "## ProGuard rules\n\nOptional If you are using ProGuard and you encounter a warning regarding our `AFKeystoreWrapper` AFKeystoreWrapper class, then add the following code to your `proguard-rules.pro` proguard-rules.pro file:",
+          "line_num": 102,
+          "nodes": [
+            {
+              "title": "AppsFlyer SDK ProGuard rules",
+              "node_id": "0010",
+              "text": "#### AppsFlyer SDK ProGuard rules\n\nGroovy\n\n```\n-keep class com.appsflyer.** { *; }\n-keep class kotlin.jvm.internal.** { *; }\n```",
+              "line_num": 106,
+              "summary": "#### AppsFlyer SDK ProGuard rules\n\nGroovy\n\n```\n-keep class com.appsflyer.** { *; }\n-keep class kotlin.jvm.internal.** { *; }\n```"
+            }
+          ],
+          "prefix_summary": "## ProGuard rules\n\nOptional If you are using ProGuard and you encounter a warning regarding our `AFKeystoreWrapper` AFKeystoreWrapper class, then add the following code to your `proguard-rules.pro` proguard-rules.pro file:"
+        },
+        {
+          "title": "Backup rules",
+          "node_id": "0011",
+          "text": "## Backup rules\n\nThe SDK's AndroidManifest.xml includes rules to opt out of backing up the Shared Preferences data. This is done to avoid retaining the same counters and AppsFlyer ID during reinstallation, thereby preventing the accurate detection of new installs or re-installs.\n\nTo merge the SDK backup rules with your app backup rules and to prevent conflicts, perform the following instructions for each use case.",
+          "line_num": 115,
+          "nodes": [
+            {
+              "title": "Fix confilict with fullBackupContent=”true”",
+              "node_id": "0012",
+              "text": "### Fix confilict with fullBackupContent=”true”\n\nIf you add `android:fullBackupContent=\"true\"` android:fullBackupContent=\"true\" in the `AndroidManifest.xml` AndroidManifest.xml , you might get the following error:\n\n```\nManifest merger failed : Attribute application@fullBackupContent value=(true)\n```\n\nTo fix this error, add `tools:replace=\"android:fullBackupContent\"` tools:replace=\"android:fullBackupContent\" in the `<application>` <application> tag in the `AndroidManifest.xml` AndroidManifest.xml file.",
+              "line_num": 121,
+              "summary": "### Fix confilict with fullBackupContent=”true”\n\nIf you add `android:fullBackupContent=\"true\"` android:fullBackupContent=\"true\" in the `AndroidManifest.xml` AndroidManifest.xml , you might get the following error:\n\n```\nManifest merger failed : Attribute application@fullBackupContent value=(true)\n```\n\nTo fix this error, add `tools:replace=\"android:fullBackupContent\"` tools:replace=\"android:fullBackupContent\" in the `<application>` <application> tag in the `AndroidManifest.xml` AndroidManifest.xml file."
+            },
+            {
+              "title": "Fix conflict with dataExtractionRule=”true”",
+              "node_id": "0013",
+              "text": "### Fix conflict with dataExtractionRule=”true”\n\nIf you add `android:dataExtractionRules=\"true\"` android:dataExtractionRules=\"true\" in the `AndroidManifest.xml` AndroidManifest.xml , you might get the following error:\n\n```\nManifest merger failed : Attribute application@dataExtractionRules value=(true)\n```\n\nTo fix this error, add `tools:replace=\"android:dataExtractionRules\"` tools:replace=\"android:dataExtractionRules\" in the `<application>` <application> tag in the `AndroidManifest.xml` AndroidManifest.xml file.",
+              "line_num": 131,
+              "summary": "### Fix conflict with dataExtractionRule=”true”\n\nIf you add `android:dataExtractionRules=\"true\"` android:dataExtractionRules=\"true\" in the `AndroidManifest.xml` AndroidManifest.xml , you might get the following error:\n\n```\nManifest merger failed : Attribute application@dataExtractionRules value=(true)\n```\n\nTo fix this error, add `tools:replace=\"android:dataExtractionRules\"` tools:replace=\"android:dataExtractionRules\" in the `<application>` <application> tag in the `AndroidManifest.xml` AndroidManifest.xml file."
+            },
+            {
+              "title": "Fix conflict with allowBackup=”false”",
+              "node_id": "0014",
+              "text": "### Fix conflict with allowBackup=”false”\n\nIf you add `android:allowBackup=\"false\"` android:allowBackup=\"false\" in the `AndroidManifest.xml` AndroidManifest.xml , you might get the following error:\n\n```\nError:\n\tAttribute application@allowBackup value=(false) from AndroidManifest.xml:\n\tis also present at [com.appsflyer:af-android-sdk:6.14.0] AndroidManifest.xml: value=(true).\n\tSuggestion: add 'tools:replace=\"android:allowBackup\"' to <application> element at AndroidManifest.xml to override.\n```\n\nTo fix this error, add `tools:replace=\"android:allowBackup\"` tools:replace=\"android:allowBackup\" in the `<application>` <application> tag in the `AndroidManifest.xml` AndroidManifest.xml file.",
+              "line_num": 141,
+              "summary": "### Fix conflict with allowBackup=”false”\n\nIf you add `android:allowBackup=\"false\"` android:allowBackup=\"false\" in the `AndroidManifest.xml` AndroidManifest.xml , you might get the following error:\n\n```\nError:\n\tAttribute application@allowBackup value=(false) from AndroidManifest.xml:\n\tis also present at [com.appsflyer:af-android-sdk:6.14.0] AndroidManifest.xml: value=(true).\n\tSuggestion: add 'tools:replace=\"android:allowBackup\"' to <application> element at AndroidManifest.xml to override.\n```\n\nTo fix this error, add `tools:replace=\"android:allowBackup\"` tools:replace=\"android:allowBackup\" in the `<application>` <application> tag in the `AndroidManifest.xml` AndroidManifest.xml file."
+            },
+            {
+              "title": "Merge backup rules in Android 12 and above",
+              "node_id": "0015",
+              "text": "### Merge backup rules in Android 12 and above\n\nIf you’re targeting Android 12 and above, and you have your own backup rules specified ( `android:dataExtractionRules=\"@xml/my_rules\"` android:dataExtractionRules=\"@xml/my_rules\" ), in addition to the instructions above, please merge your backup rules with the AppsFlyer rules manually by adding the following rule:\n\nAndroidManfiest.xml\n\n```\n<data-extraction-rules>\n    <cloud-backup>\n        <exclude domain=\"sharedpref\" path=\"appsflyer-data\"/>\n    </cloud-backup>\n    <device-transfer>\n        <exclude domain=\"sharedpref\" path=\"appsflyer-data\"/>\n    </device-transfer>\n</data-extraction-rules>\n```",
+              "line_num": 154,
+              "summary": "### Merge backup rules in Android 12 and above\n\nIf you’re targeting Android 12 and above, and you have your own backup rules specified ( `android:dataExtractionRules=\"@xml/my_rules\"` android:dataExtractionRules=\"@xml/my_rules\" ), in addition to the instructions above, please merge your backup rules with the AppsFlyer rules manually by adding the following rule:\n\nAndroidManfiest.xml\n\n```\n<data-extraction-rules>\n    <cloud-backup>\n        <exclude domain=\"sharedpref\" path=\"appsflyer-data\"/>\n    </cloud-backup>\n    <device-transfer>\n        <exclude domain=\"sharedpref\" path=\"appsflyer-data\"/>\n    </device-transfer>\n</data-extraction-rules>\n```"
+            },
+            {
+              "title": "Merge backup rules in Android 11 and below",
+              "node_id": "0016",
+              "text": "### Merge backup rules in Android 11 and below\n\nIf you’re also targeting Android 11 and lower, and you have your own backup rules specified ( `android:fullBackupContent=\"@xml/my_rules\"` android:fullBackupContent=\"@xml/my_rules\" ), in addition to the instructions above, please merge your backup rules with the AppsFlyer rules manually by adding the following rule:\n\nAndroidManfiest.xml\n\n```\n<full-backup-content>\n    ...//your custom rules\n    <exclude domain=\"sharedpref\" path=\"appsflyer-data\"/>\n</full-backup-content>\n```",
+              "line_num": 171,
+              "summary": "### Merge backup rules in Android 11 and below\n\nIf you’re also targeting Android 11 and lower, and you have your own backup rules specified ( `android:fullBackupContent=\"@xml/my_rules\"` android:fullBackupContent=\"@xml/my_rules\" ), in addition to the instructions above, please merge your backup rules with the AppsFlyer rules manually by adding the following rule:\n\nAndroidManfiest.xml\n\n```\n<full-backup-content>\n    ...//your custom rules\n    <exclude domain=\"sharedpref\" path=\"appsflyer-data\"/>\n</full-backup-content>\n```"
+            }
+          ],
+          "prefix_summary": "## Backup rules\n\nThe SDK's AndroidManifest.xml includes rules to opt out of backing up the Shared Preferences data. This is done to avoid retaining the same counters and AppsFlyer ID during reinstallation, thereby preventing the accurate detection of new installs or re-installs.\n\nTo merge the SDK backup rules with your app backup rules and to prevent conflicts, perform the following instructions for each use case."
+        },
+        {
+          "title": "Adding store referrer libraries",
+          "node_id": "0017",
+          "text": "## Adding store referrer libraries\n\nThe AppsFlyer SDK supports several store referrer libraries. Using a store referrer improves attribution accuracy.\n\nYou only need to add the referrer dependency, the SDK takes care of the rest.",
+          "line_num": 184,
+          "nodes": [
+            {
+              "title": "Google Play Install Referrer",
+              "node_id": "0018",
+              "text": "### Google Play Install Referrer\n\nAdd the following dependency to your `build.gradle` build.gradle :\n\nGroovy\n\n```\ndependencies {\n    // ...\n    implementation \"com.android.installreferrer:installreferrer:2.2\"\n}\n```\n\nGoogle Play Install Referrer ProGuard rules\n\nGroovy\n\n```\n-keep public class com.android.installreferrer.** { *; }\n```",
+              "line_num": 190,
+              "summary": "### Google Play Install Referrer\n\nAdd the following dependency to your `build.gradle` build.gradle :\n\nGroovy\n\n```\ndependencies {\n    // ...\n    implementation \"com.android.installreferrer:installreferrer:2.2\"\n}\n```\n\nGoogle Play Install Referrer ProGuard rules\n\nGroovy\n\n```\n-keep public class com.android.installreferrer.** { *; }\n```"
+            },
+            {
+              "title": "Meta Install Referrer",
+              "node_id": "0019",
+              "text": "### Meta Install Referrer\n\nMeta install referrer allows AppsFlyer to receive ad campaign metadata from a device’s local storage.",
+              "line_num": 211,
+              "nodes": [
+                {
+                  "title": "Meta Install Referrer basic flow",
+                  "node_id": "0020",
+                  "text": "#### Meta Install Referrer basic flow\n\nThe basic flow of the Meta install referrer mechanism is as follows:\n\n1. Once the SDK initializes, it uses the app's Facebook App ID to make a request to the Meta Content Provider API, retrieving the stored metadata from the Facebook app.\n2. AppsFlyer SDK sends the install event, along with the attribution data, to the AppsFlyer servers.",
+                  "line_num": 215,
+                  "summary": "#### Meta Install Referrer basic flow\n\nThe basic flow of the Meta install referrer mechanism is as follows:\n\n1. Once the SDK initializes, it uses the app's Facebook App ID to make a request to the Meta Content Provider API, retrieving the stored metadata from the Facebook app.\n2. AppsFlyer SDK sends the install event, along with the attribution data, to the AppsFlyer servers."
+                },
+                {
+                  "title": "Prerequisites",
+                  "node_id": "0021",
+                  "text": "#### Prerequisites\n\nTo support the Meta install referrer, the following is required:\n\n- SDK : Integrate with Android SDK version 6.12.6 or higher.\n- Facebook App Version : Users must have version 428.x.x or above installed on their device.\n- Instagram App Version : Users must have version 296.x.x or above installed on their device.",
+                  "line_num": 222,
+                  "summary": "#### Prerequisites\n\nTo support the Meta install referrer, the following is required:\n\n- SDK : Integrate with Android SDK version 6.12.6 or higher.\n- Facebook App Version : Users must have version 428.x.x or above installed on their device.\n- Instagram App Version : Users must have version 296.x.x or above installed on their device."
+                },
+                {
+                  "title": "Configure Meta Install Referrer Support",
+                  "node_id": "0022",
+                  "text": "#### Configure Meta Install Referrer Support\n\nTo enable Meta install referrer support make the Facebook App ID available to the SDK by adding it to the `AndroidManifest.xml` AndroidManifest.xml . This can be done either when integrating the Facebook SDK with the app or when integrating the AppsFlyer SDK with the app.",
+                  "line_num": 230,
+                  "nodes": [
+                    {
+                      "title": "With Facebook SDK integrated",
+                      "node_id": "0023",
+                      "text": "##### With Facebook SDK integrated\n\nRefer to [Facebook’s official guide](https://developers.facebook.com/docs/android/getting-started#client-token) Facebook’s official guide to learn how to add the Facebook App ID to `AndroidManifest.xml` AndroidManifest.xml . The SDK will read the Facebook App ID from the `meta-data` meta-data tag.",
+                      "line_num": 234,
+                      "summary": "##### With Facebook SDK integrated\n\nRefer to [Facebook’s official guide](https://developers.facebook.com/docs/android/getting-started#client-token) Facebook’s official guide to learn how to add the Facebook App ID to `AndroidManifest.xml` AndroidManifest.xml . The SDK will read the Facebook App ID from the `meta-data` meta-data tag."
+                    },
+                    {
+                      "title": "Without Facebook SDK integration",
+                      "node_id": "0024",
+                      "text": "##### Without Facebook SDK integration\n\nInclude the following tag in `AndroidManifest.xml` AndroidManifest.xml\n\nXML\n\n```\n<meta-data android:name=\"com.appsflyer.FacebookApplicationId\" android:value=\"@string/facebook_application_id\" />\n```\n\nInclude in your `strings.xml` strings.xml file:\n\nXML\n\n```\n<string name=\"facebook_application_id\" translatable=\"false\"><YOUR_FACEBOOK_APP_ID></string>\n```",
+                      "line_num": 238,
+                      "summary": "##### Without Facebook SDK integration\n\nInclude the following tag in `AndroidManifest.xml` AndroidManifest.xml\n\nXML\n\n```\n<meta-data android:name=\"com.appsflyer.FacebookApplicationId\" android:value=\"@string/facebook_application_id\" />\n```\n\nInclude in your `strings.xml` strings.xml file:\n\nXML\n\n```\n<string name=\"facebook_application_id\" translatable=\"false\"><YOUR_FACEBOOK_APP_ID></string>\n```"
+                    }
+                  ],
+                  "prefix_summary": "#### Configure Meta Install Referrer Support\n\nTo enable Meta install referrer support make the Facebook App ID available to the SDK by adding it to the `AndroidManifest.xml` AndroidManifest.xml . This can be done either when integrating the Facebook SDK with the app or when integrating the AppsFlyer SDK with the app."
+                }
+              ],
+              "prefix_summary": "### Meta Install Referrer\n\nMeta install referrer allows AppsFlyer to receive ad campaign metadata from a device’s local storage."
+            },
+            {
+              "title": "Huawei Install Referrer",
+              "node_id": "0025",
+              "text": "### Huawei Install Referrer\n\nHuawei Referrer is supported in SDK v6.14.0 and above. Due to changes in the Huawei AppGallery store, previous versions of the AppsFlyer SDK are not able to fetch the referrer from the store.\n\nAdd the following repository to your Project's `build.gradle` build.gradle :\n\nGroovy\n\n```\nrepositories {\n    //...\n    maven { url 'https://developer.huawei.com/repo/' }\n}\n```\n\nAdd the following dependency in the app's `build.gradle` build.gradle :\n\nGroovy\n\n```\ndependencies {\n    // ...\n    implementation 'com.huawei.hms:componentverifysdk:13.3.1.301'\n}\n```\n\nIf you are using ProGuard, add the following keep rules to your `proguard-rules.pro` proguard-rules.pro file:\n\nGroovy\n\n```\n-keep class com.huawei.hms.**{*;}\n```",
+              "line_num": 256,
+              "summary": "### Huawei Install Referrer\n\nHuawei Referrer is supported in SDK v6.14.0 and above. Due to changes in the Huawei AppGallery store, previous versions of the AppsFlyer SDK are not able to fetch the referrer from the store.\n\nAdd the following repository to your Project's `build.gradle` build.gradle :\n\nGroovy\n\n```\nrepositories {\n    //...\n    maven { url 'https://developer.huawei.com/repo/' }\n}\n```\n\nAdd the following dependency in the app's `build.gradle` build.gradle :\n\nGroovy\n\n```\ndependencies {\n    // ...\n    implementation 'com.huawei.hms:componentverifysdk:13.3.1.301'\n}\n```\n\nIf you are using ProGuard, add the following keep rules to your `proguard-rules.pro` proguard-rules.pro file:\n\nGroovy\n\n```\n-keep class com.huawei.hms.**{*;}\n```"
+            },
+            {
+              "title": "Xiaomi GetApps store referrer",
+              "node_id": "0026",
+              "text": "### Xiaomi GetApps store referrer\n\nV6.9.0 Add the following dependency to your `build.gradle` build.gradle :\n\nGroovy\n\n```\ndependencies {\n  // ...\n  implementation \"com.miui.referrer:homereferrer:1.0.0.6\"\n}\n```\n\nXiaomi GetApps store referrer ProGuard rules\n\nGroovy\n\n```\n-keep public class com.miui.referrer.** {*;}\n```\n\n> 📘 Note Samsung store referrer is supported out-of-the-box starting SDK V6.1.1 and does not require any additional integration.",
+              "line_num": 290,
+              "summary": "### Xiaomi GetApps store referrer\n\nV6.9.0 Add the following dependency to your `build.gradle` build.gradle :\n\nGroovy\n\n```\ndependencies {\n  // ...\n  implementation \"com.miui.referrer:homereferrer:1.0.0.6\"\n}\n```\n\nXiaomi GetApps store referrer ProGuard rules\n\nGroovy\n\n```\n-keep public class com.miui.referrer.** {*;}\n```\n\n> 📘 Note Samsung store referrer is supported out-of-the-box starting SDK V6.1.1 and does not require any additional integration."
+            }
+          ],
+          "prefix_summary": "## Adding store referrer libraries\n\nThe AppsFlyer SDK supports several store referrer libraries. Using a store referrer improves attribution accuracy.\n\nYou only need to add the referrer dependency, the SDK takes care of the rest."
+        },
+        {
+          "title": "Collecting AppSet ID",
+          "node_id": "0027",
+          "text": "## Collecting AppSet ID\n\nStarting with v6.17.0 , the SDK can automatically collect the [AppSet ID](https://developer.android.com/identity/app-set-id) AppSet ID . To enable this functionality, add the Google Play services AppSet dependency to your module-level `build.gradle` build.gradle file:\n\nGroovy\n\n```\ndependencies {\n    implementation 'com.google.android.gms:play-services-appset:16.1.0'\n}\n```\n\nOnce added, the SDK will collect the AppSet ID if it is available on the device. To disable AppSet ID collection, use the [disableAppSetId()](https://dev.appsflyer.com/hc/docs/android-sdk-reference-appsflyerlib#disableappsetid) `disableAppSetId()` disableAppSetId() .",
+          "line_num": 313,
+          "summary": "## Collecting AppSet ID\n\nStarting with v6.17.0 , the SDK can automatically collect the [AppSet ID](https://developer.android.com/identity/app-set-id) AppSet ID . To enable this functionality, add the Google Play services AppSet dependency to your module-level `build.gradle` build.gradle file:\n\nGroovy\n\n```\ndependencies {\n    implementation 'com.google.android.gms:play-services-appset:16.1.0'\n}\n```\n\nOnce added, the SDK will collect the AppSet ID if it is available on the device. To disable AppSet ID collection, use the [disableAppSetId()](https://dev.appsflyer.com/hc/docs/android-sdk-reference-appsflyerlib#disableappsetid) `disableAppSetId()` disableAppSetId() ."
+        },
+        {
+          "title": "Google Play Integrity API",
+          "node_id": "0028",
+          "text": "## Google Play Integrity API\n\nStarting with v6.17.1 , the SDK has built-in integration with Google Play Integrity API. This provides device‑integrity verification through Google Play. You can read more about it [here](https://support.google.com/googleplay/android-developer/answer/15299193) here\n\nIf your app is distributed outside the Google Play Store, you can safely exclude this dependency by adding the following lines to your app's `build.gradle` build.gradle :\n\nGroovy\n\n```\nimplementation (\"com.appsflyer:af-android-sdk:HERE_SDK_VERSION\") {\n    exclude group: 'com.google.android.play', module: 'integrity'\n}\n\n// For example:\n// implementation (\"com.appsflyer:af-android-sdk:6.17.1\") {\n//      exclude group: 'com.google.android.play', module: 'integrity'\n// }\n```",
+          "line_num": 327,
+          "summary": "## Google Play Integrity API\n\nStarting with v6.17.1 , the SDK has built-in integration with Google Play Integrity API. This provides device‑integrity verification through Google Play. You can read more about it [here](https://support.google.com/googleplay/android-developer/answer/15299193) here\n\nIf your app is distributed outside the Google Play Store, you can safely exclude this dependency by adding the following lines to your app's `build.gradle` build.gradle :\n\nGroovy\n\n```\nimplementation (\"com.appsflyer:af-android-sdk:HERE_SDK_VERSION\") {\n    exclude group: 'com.google.android.play', module: 'integrity'\n}\n\n// For example:\n// implementation (\"com.appsflyer:af-android-sdk:6.17.1\") {\n//      exclude group: 'com.google.android.play', module: 'integrity'\n// }\n```"
+        },
+        {
+          "title": "Known issues",
+          "node_id": "0029",
+          "text": "## Known issues",
+          "line_num": 346,
+          "nodes": [
+            {
+              "title": "Missing resource files",
+              "node_id": "0030",
+              "text": "### Missing resource files\n\nSDK V5 If you are using Android SDK V5 and above, make sure that in the APK file, in addition to the `classes.dex` classes.dex and resources files, you also have a com > appsflyer > internal folder with files `a-` a- and `b-` b- inside. Note: Before SDK 5.3.0, file names are `a.` a. and `b.` b.\n\nCheck that you have the required files by opening your APK in Android Studio:\n\n![](https://files.readme.io/9969b81-image_with_dash.png)\n\nIf those files are missing, the SDK can't make network requests to our server, and you need to contact your CSM or support.",
+              "line_num": 348,
+              "summary": "### Missing resource files\n\nSDK V5 If you are using Android SDK V5 and above, make sure that in the APK file, in addition to the `classes.dex` classes.dex and resources files, you also have a com > appsflyer > internal folder with files `a-` a- and `b-` b- inside. Note: Before SDK 5.3.0, file names are `a.` a. and `b.` b.\n\nCheck that you have the required files by opening your APK in Android Studio:\n\n![](https://files.readme.io/9969b81-image_with_dash.png)\n\nIf those files are missing, the SDK can't make network requests to our server, and you need to contact your CSM or support."
+            },
+            {
+              "title": "Boot Complete",
+              "node_id": "0031",
+              "text": "### Boot Complete\n\nIf your app listens for `LOCKED_BOOT_COMPLETED` LOCKED_BOOT_COMPLETED , make sure that all interactions with the SDK are initiated from the launcher activity. This precaution prevents the SDK from crashing when attempting to access `SharedPreferences` SharedPreferences on a device that is still locked.\n\nUpdated 6 months ago\n\n---\n\n- Table of Contents\n- - Recommended\n  - Installing the Android SDK \n    - Install using Gradle\n    - Manual install\n  - Setting required permissions \n    - The AD_ID permission\n  - ProGuard rules\n  - Backup rules \n    - Fix confilict with fullBackupContent=”true”\n    - Fix conflict with dataExtractionRule=”true”\n    - Fix conflict with allowBackup=”false”\n    - Merge backup rules in Android 12 and above\n    - Merge backup rules in Android 11 and below\n  - Adding store referrer libraries \n    - Google Play Install Referrer\n    - Meta Install Referrer\n    - Huawei Install Referrer\n    - Xiaomi GetApps store referrer\n  - Collecting AppSet ID\n  - Google Play Integrity API\n  - Known issues \n    - Missing resource files\n    - Boot Complete",
+              "line_num": 358,
+              "summary": "The partial document provides guidance on handling the `LOCKED_BOOT_COMPLETED` broadcast in Android apps, emphasizing the importance of initiating SDK interactions from the launcher activity to avoid crashes when accessing `SharedPreferences` on locked devices. It also includes a table of contents covering topics such as installing the Android SDK, setting permissions (e.g., AD_ID), ProGuard and backup rules, adding store referrer libraries, collecting AppSet ID, using the Google Play Integrity API, and addressing known issues like missing resource files and boot completion handling."
+            }
+          ],
+          "prefix_summary": "## Known issues"
+        }
+      ],
+      "prefix_summary": "# Install SDK\n\nLearn how to download and install the Android SDK."
+    }
+  ]
+}
