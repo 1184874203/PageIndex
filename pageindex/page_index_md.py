@@ -59,31 +59,50 @@ def extract_nodes_from_markdown(markdown_content):
     return node_list, lines
 
 
-def extract_node_text_content(node_list, markdown_lines):    
+def detect_content_type(text):
+    """
+    Detect the content type of a text block.
+    Returns: 'code', 'table', 'mixed', or 'text'
+    """
+    has_code = '```' in text
+    has_table = bool(re.search(r'\|.*\|', text))
+
+    if has_code and has_table:
+        return 'mixed'
+    elif has_code:
+        return 'code'
+    elif has_table:
+        return 'table'
+    else:
+        return 'text'
+
+
+def extract_node_text_content(node_list, markdown_lines):
     all_nodes = []
     for node in node_list:
         line_content = markdown_lines[node['line_num'] - 1]
         header_match = re.match(r'^(#{1,6})', line_content)
-        
+
         if header_match is None:
             print(f"Warning: Line {node['line_num']} does not contain a valid header: '{line_content}'")
             continue
-            
+
         processed_node = {
             'title': node['node_title'],
             'line_num': node['line_num'],
             'level': len(header_match.group(1))
         }
         all_nodes.append(processed_node)
-    
+
     for i, node in enumerate(all_nodes):
-        start_line = node['line_num'] - 1 
+        start_line = node['line_num'] - 1
         if i + 1 < len(all_nodes):
-            end_line = all_nodes[i + 1]['line_num'] - 1 
+            end_line = all_nodes[i + 1]['line_num'] - 1
         else:
             end_line = len(markdown_lines)
-        
-        node['text'] = '\n'.join(markdown_lines[start_line:end_line]).strip()    
+
+        node['text'] = '\n'.join(markdown_lines[start_line:end_line]).strip()
+        node['content_type'] = detect_content_type(node['text'])
     return all_nodes
 
 def update_node_list_with_text_token_count(node_list, model=None):

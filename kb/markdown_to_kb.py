@@ -116,6 +116,7 @@ class MarkdownToKB:
         self.structure_file = os.path.join(self.output_dir, f'{self.md_name}_structure.json')
         self.lite_file = os.path.join(self.output_dir, f'{self.md_name}_index_lite.json')
         self.text_summary_file = os.path.join(self.output_dir, f'{self.md_name}_text_summary.json')
+        self.retrieval_guide_file = os.path.join(self.output_dir, f'{self.md_name}_retrieval_guide.json')
 
     def generate_structure(self) -> str:
         """
@@ -166,7 +167,7 @@ class MarkdownToKB:
 
     def generate_lite_index(self, structure_file: Optional[str] = None) -> str:
         """
-        第二步：生成轻量级索引文件（只保留 title 和 node_id）
+        第二步：生成增强版轻量级索引文件（保留 summary，添加 content_type、token_count、depth）
 
         Args:
             structure_file: 结构文件路径，如果为 None 则使用默认路径
@@ -179,47 +180,28 @@ class MarkdownToKB:
         if not os.path.exists(structure_file):
             raise FileNotFoundError(f"Structure file not found: {structure_file}")
 
-        print(f'[2/3] Generating lite index (keeping only title and node_id)...')
+        print(f'[2/4] Generating enhanced lite index (with summary, content_type, token_count, depth)...')
 
-        # 读取结构文件
-        with open(structure_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        # 使用增强版函数
+        try:
+            from kb.kb_utils import generate_enhanced_lite_index
+        except ImportError:
+            from kb_utils import generate_enhanced_lite_index
 
-        # 递归移除除了 title 和 node_id 之外的所有字段
-        def _keep_only_structure(obj):
-            if isinstance(obj, dict):
-                new = {}
-                for k, v in obj.items():
-                    # 只保留 title, node_id, nodes, doc_name, structure
-                    if k in ('title', 'node_id', 'nodes', 'doc_name', 'structure'):
-                        if isinstance(v, (dict, list)):
-                            new[k] = _keep_only_structure(v)
-                        else:
-                            new[k] = v
-                return new
-            elif isinstance(obj, list):
-                return [_keep_only_structure(item) for item in obj]
-            else:
-                return obj
-
-        lite_data = _keep_only_structure(data)
-
-        # 保存轻量级索引文件
-        with open(self.lite_file, 'w', encoding='utf-8') as f:
-            json.dump(lite_data, f, ensure_ascii=False, indent=2)
+        lite_file = generate_enhanced_lite_index(structure_file, self.lite_file)
 
         # 计算文件大小
         structure_size = os.path.getsize(structure_file)
-        lite_size = os.path.getsize(self.lite_file)
+        lite_size = os.path.getsize(lite_file)
         reduction = (1 - lite_size / structure_size) * 100 if structure_size > 0 else 0
 
-        print(f'  ✓ Lite index saved to: {self.lite_file}')
+        print(f'  ✓ Enhanced lite index saved to: {lite_file}')
         print(f'    Size reduction: {reduction:.1f}% ({structure_size:,} → {lite_size:,} bytes)')
-        return self.lite_file
+        return lite_file
 
     def generate_text_summary(self, structure_file: Optional[str] = None) -> str:
         """
-        第三步：生成 node_id 到 text 和 summary 的映射文件
+        第三步：生成增强版 node_id 到 text 和 summary 的映射文件（添加关系信息）
 
         Args:
             structure_file: 结构文件路径，如果为 None 则使用默认路径
@@ -232,46 +214,51 @@ class MarkdownToKB:
         if not os.path.exists(structure_file):
             raise FileNotFoundError(f"Structure file not found: {structure_file}")
 
-        print(f'[3/3] Generating text and summary lookup (node_id → text & summary)...')
+        print(f'[3/4] Generating enhanced text & summary lookup (with parent_id, children_ids, title)...')
 
-        # 读取结构文件
-        with open(structure_file, 'r', encoding='utf-8') as f:
-            data = json.load(f)
+        # 使用增强版函数
+        try:
+            from kb.kb_utils import generate_text_summary
+        except ImportError:
+            from kb_utils import generate_text_summary
 
-        # 收集所有 node_id 和对应的 text 和 summary
-        mapping = {}
+        text_summary_file = generate_text_summary(structure_file, self.text_summary_file)
 
-        def _collect(obj):
-            if isinstance(obj, dict):
-                nid = obj.get('node_id')
-                if nid is not None:
-                    # 创建包含 text 和 summary 的字典
-                    node_data = {}
-                    if 'text' in obj:
-                        node_data['text'] = obj.get('text', '')
-                    if 'summary' in obj:
-                        node_data['summary'] = obj.get('summary', '')
+        # 读取生成的文件以获取节点数量
+        with open(text_summary_file, 'r', encoding='utf-8') as f:
+            mapping = json.load(f)
 
-                    # 只有当至少有一个字段存在时才添加
-                    if node_data:
-                        mapping[nid] = node_data
-
-                for v in obj.values():
-                    if isinstance(v, (dict, list)):
-                        _collect(v)
-            elif isinstance(obj, list):
-                for item in obj:
-                    _collect(item)
-
-        _collect(data)
-
-        # 保存文本摘要映射文件
-        with open(self.text_summary_file, 'w', encoding='utf-8') as f:
-            json.dump(mapping, f, ensure_ascii=False, indent=2)
-
-        print(f'  ✓ Text & summary lookup saved to: {self.text_summary_file}')
+        print(f'  ✓ Enhanced text & summary lookup saved to: {text_summary_file}')
         print(f'    Total nodes: {len(mapping)}')
-        return self.text_summary_file
+        return text_summary_file
+
+    def generate_retrieval_guide(self, structure_file: Optional[str] = None) -> str:
+        """
+        第四步：生成检索指南文件（包含提示词模板）
+
+        Args:
+            structure_file: 结构文件路径，如果为 None 则使用默认路径
+
+        Returns:
+            生成的检索指南文件路径
+        """
+        structure_file = structure_file or self.structure_file
+
+        if not os.path.exists(structure_file):
+            raise FileNotFoundError(f"Structure file not found: {structure_file}")
+
+        print(f'[4/4] Generating retrieval guide (with prompt templates)...')
+
+        # 使用新函数
+        try:
+            from kb.kb_utils import generate_retrieval_guide
+        except ImportError:
+            from kb_utils import generate_retrieval_guide
+
+        guide_file = generate_retrieval_guide(structure_file, self.retrieval_guide_file)
+
+        print(f'  ✓ Retrieval guide saved to: {guide_file}')
+        return guide_file
 
     def convert_all(self, keep_structure: bool = False) -> Dict[str, str]:
         """
@@ -291,10 +278,11 @@ class MarkdownToKB:
         print(f'{"="*60}\n')
 
         try:
-            # 执行三个步骤
+            # 执行四个步骤
             structure_file = self.generate_structure()
             lite_file = self.generate_lite_index(structure_file)
             text_summary_file = self.generate_text_summary(structure_file)
+            retrieval_guide_file = self.generate_retrieval_guide(structure_file)
 
             # 删除临时的 structure 文件（除非指定保留）
             if not keep_structure and os.path.exists(structure_file):
@@ -305,15 +293,17 @@ class MarkdownToKB:
             print(f'✓ Conversion completed successfully!')
             print(f'{"="*60}')
             print(f'Generated files in: {self.output_dir}')
-            print(f'  1. Lite Index:    {os.path.basename(lite_file)}')
-            print(f'  2. Text & Summary: {os.path.basename(text_summary_file)}')
+            print(f'  1. Lite Index:       {os.path.basename(lite_file)}')
+            print(f'  2. Text & Summary:   {os.path.basename(text_summary_file)}')
+            print(f'  3. Retrieval Guide:  {os.path.basename(retrieval_guide_file)}')
             if keep_structure:
-                print(f'  3. Structure:     {os.path.basename(structure_file)} (kept)')
+                print(f'  4. Structure:        {os.path.basename(structure_file)} (kept)')
             print(f'{"="*60}\n')
 
             result = {
                 'lite': lite_file,
                 'text_summary': text_summary_file,
+                'retrieval_guide': retrieval_guide_file,
                 'output_dir': self.output_dir
             }
 
@@ -342,6 +332,7 @@ class MarkdownToKB:
         for name, path in [
             ('lite', self.lite_file),
             ('text_summary', self.text_summary_file),
+            ('retrieval_guide', self.retrieval_guide_file),
             ('structure', self.structure_file)
         ]:
             if os.path.exists(path):

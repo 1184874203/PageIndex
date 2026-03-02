@@ -1,0 +1,29 @@
+#!/usr/bin/env python3
+"""
+Lightweight CLI wrapper for kb.markdown_to_kb
+
+This script delegates to the `main()` function defined in
+`kb/markdown_to_kb.py` so you can run the converter without
+referencing the package path manually.
+
+Usage (from project root):
+  ./scripts/markdown_to_kb path/to/doc.md [--output-dir ./kb ...]
+
+Note: make executable with `chmod +x scripts/markdown_to_kb`.
+"""
+
+import sys
+from pathlib import Path
+
+# Ensure repository root is on sys.path so `import kb` works when this script
+# is executed directly from the project root or any subdirectory.
+_repo_root = Path(__file__).resolve().parents[1]
+_repo_root_str = str(_repo_root)
+if _repo_root_str not in sys.path:
+    sys.path.insert(0, _repo_root_str)
+
+from kb.markdown_to_kb import main
+
+if __name__ == "__main__":
+    main()
+
